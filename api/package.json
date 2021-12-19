@@ -1,0 +1,45 @@
+{
+  "name": "custom_product_option_api",
+  "version": "1.0.0",
+  "description": "Create custom option for shopify products",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel ./server --out-dir public",
+    "dev": "nodemon --exec babel-node index.js",
+    "start": "node ./public/server.js",
+    "heroku-postbuild": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmars13/custom-options-shpify.git"
+  },
+  "author": "Jomar",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "7.12.10",
+    "@babel/node": "^7.16.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/preset-env": "^7.13.9",
+    "@babel/runtime": "^7.16.3",
+    "@shopify/shopify-api": "^2.0.0",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.16.4",
+    "nodemon": "^2.0.15"
+  },
+  "engines": {
+    "node": "14.x"
+  },
+  "bugs": {
+    "url": "https://github.com/gmars13/custom-options-shpify/issues"
+  },
+  "homepage": "https://github.com/gmars13/custom-options-shpify#readme"
+}
