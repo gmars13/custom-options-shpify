@@ -1,7 +1,6 @@
 import cors from 'cors'
 import dotenv from "dotenv";
 import express from 'express';
-import BodyParser from 'body-parser'
 import router from './router/shop.routes'
 
 dotenv.config();
@@ -9,6 +8,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 // app.use(BodyParser)
 // app.use(BodyParser.urlencoded({limit: '50mb', extended: true}));
 

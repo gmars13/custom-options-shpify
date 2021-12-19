@@ -18,26 +18,29 @@ class ShopModel{
 
     
     createProductOptions = async (query) => {
-        let [shopData] = await this.fetchAccessToken(query.shop);
-        console.log(shopData)
-        let createClient = new CreatClient()
-        let {client, DataType} = createClient.restClient(shopData.name, shopData.access_token)
-        console.log(client)
-        const params = {
-            "product": {
-                "title":"Working API Custom Product",
-                "body_html":"Custom product",
-                "variants": [{"option1":"First","price":`100.00`,"sku":"123"}]
-            }
-        };
+        try {
+            let [shopData] = await this.fetchAccessToken(query.shop);
+            let createClient = new CreatClient()
+            let {client, DataType} = createClient.restClient(shopData.name, shopData.access_token)
+            console.log(client)
+            const params = {
+                "product": {
+                    "title":"Working API Custom Product",
+                    "body_html":"Custom product",
+                    "variants": [{"option1":"First","price":`100.00`,"sku":"123"}]
+                }
+            };
 
-        const data = await client.post({
-            path: 'products',
-            data: params,
-            type: DataType.JSON,
-        });
+            const data = await client.post({
+                path: 'products',
+                data: params,
+                type: DataType.JSON,
+            });
 
-        return data
+            return data
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     registerShop = async (params) => {

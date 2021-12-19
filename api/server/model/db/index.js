@@ -1,12 +1,11 @@
 import mysql from 'mysql';
+import dbConfig  from '../../../config/db.config'
 
-const db = mysql.createPool({
-    connectionLimit: 10,
-    password: '',
-    user: 'root',
-    database: 'shopify_custom_options',
-    host: 'localhost',
-    port : 3306
-})
-
-export default db;
+var connection = mysql.createPool({
+  host: dbConfig.HOST,
+  user: dbConfig.USER,
+  password: dbConfig.PASSWORD,
+  database: dbConfig.DB
+});
+console.log(connection)
+module.exports = connection;

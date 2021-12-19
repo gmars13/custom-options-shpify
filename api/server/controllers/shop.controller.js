@@ -5,10 +5,14 @@ class ShopController{
     }
 
     createProductOptions = async (req, res) => {
-        let shopsModel = new ShopsModel();
-        let data = await shopsModel.createProductOptions(req.body)
+        try {
+            let shopsModel = new ShopsModel();
+            let data = await shopsModel.createProductOptions(req.body)
 
-        res.json(data)
+            res.json(data)
+        } catch (error) {
+            console.log(error.message)
+        }
     }
     
     registerShop = async (req, res) => {
