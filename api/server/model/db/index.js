@@ -7,5 +7,5 @@ var connection = mysql.createPool({
   password: dbConfig.PASSWORD,
   database: dbConfig.DB
 });
-console.log(connection)
+
 module.exports = connection;
