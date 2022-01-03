@@ -34,7 +34,7 @@ class ShopModel{
                 "product": {
                     "title":"Working API Custom Product",
                     "body_html":"Custom product",
-                    "variants": [{"option1":"First","price":`${price}`,"sku":"123"}]
+                    "variants": [{"option1":"First","price":`${price.toFixed(2)}`,"sku":"123"}]
                 }
             };
 
@@ -132,7 +132,7 @@ class ShopModel{
                     cushionSizePrice[`${cushionSize}`].welting[`${welting}`] + 
                     tiesCount[`${ties}`] * pricePerTie
                     ) * cushionSizePrice[`${cushionSize}`].productType;
-            
+                
                 let create_product_result = params.createProductOptions(newPrice, shop)
                     .then(result=>{
                         return {
