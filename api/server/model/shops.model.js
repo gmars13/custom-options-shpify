@@ -63,10 +63,7 @@ class ShopModel{
 
     createProductCustomOptions = async (params) => {
         let [store_data] = await this.fetchAccessToken(params.shop);
-        
         let generate_function = () => {
-            let response = {status : false, result : null, error : ""}
-
             try {
                 let { fill, thickness = +thickness, depth = +depth, width = +width, welting, shop, ties, shape, fabric } = params.body;
                 let fabric_options = ["red", "blue", "green"];
@@ -127,12 +124,27 @@ class ShopModel{
                 let surfaceArea = ((thickness * depth) + (thickness * width) + (depth * width)) * 2;
             
                 let newPrice = (
+                    /*DOCU:
+                        Foam price
+                    */
                     (thickness * depth * width)/144 * defaultFoamPrice[`${fill}`] + 
-                    Math.ceil(surfaceArea / 1944) * 1.2 * defaultFabricPrice + 
+                    /*DOCU:
+                        Fabric price
+                    */
+                    Math.ceil(surfaceArea / 1944) * 1.2 * defaultFabricPrice +
+                    /*DOCU:
+                        Welting price
+                    */
                     cushionSizePrice[`${cushionSize}`].welting[`${welting}`] + 
-                    tiesCount[`${ties}`] * pricePerTie
-                    ) * cushionSizePrice[`${cushionSize}`].productType;
-                
+                    /*DOCU:
+                        Tie price
+                    */
+                    tiesCount[`${ties}`] * pricePerTie) *
+                    /*DOCU:
+                        Product type price
+                    */
+                    cushionSizePrice[`${cushionSize}`].productType
+                    
                 let create_product_result = params.createProductOptions(newPrice, shop)
                     .then(result=>{
                         return {
@@ -141,15 +153,15 @@ class ShopModel{
                             quantity: 1,
                             title: `Cushion with custom options`,
                             properties: {
-                                shape,
-                                fabric,
-                                fill,
-                                welting,
-                                ties,
-                                thickness,
-                                depth,
-                                width
-                            }
+                                    shape,
+                                    fabric,
+                                    fill,
+                                    welting,
+                                    ties,
+                                    thickness,
+                                    depth,
+                                    width
+                                }
                             }]
                         }
                     })
@@ -157,15 +169,10 @@ class ShopModel{
                         throw Error (error);
                     })
                 
-                response.status = true;
-                response.result = create_product_result;
-
+                return create_product_result;
             } catch (error) {
-                console.log(error)
-                response.error = error.message
+                console.log(error);
             }
-
-            return response
         }
 
         let to_be_stored_function = generate_function.toString();
@@ -181,11 +188,11 @@ class ShopModel{
         let [store_data] = await this.fetchAccessToken(params.body.shop);
         let [stored_function] = await this.fetchFunction(store_data.id, params.body.product_id)
         let function_json = JSON.parse(stored_function.product_function);
-        let product_function = Function(function_json.function[0], function_json.function[1])
-        
         params.createProductOptions = this.createProductOptions;
-                
-        return await product_function(params)
+        
+        let product_function = Function(function_json.function[0], function_json.function[1]);
+
+        return await product_function(params);
     }
 }
 
