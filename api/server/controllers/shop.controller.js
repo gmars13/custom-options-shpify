@@ -34,7 +34,20 @@ class ShopController{
         }
         res.end();
     }
+
+    calculatePriceSeatCushions = async (req, res) => {
+        try {
+            let shopsModel = new ShopsModel();
+            let data = await shopsModel.calculatePriceSeatCushions(req)
+
+            res.json(data)
+        } catch (error) {
+            console.log(error)
+        }
+        res.end();
+    }
 }
+
 export default (function shop(){
     return new ShopController();
 })();

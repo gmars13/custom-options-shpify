@@ -9,4 +9,6 @@ router.post('/add_product_custom_options', shopController.createProductCustomOpt
 
 router.post('/generate_custom_product', shopController.generateCustomProduct);
 
+router.post('/calculate_price_seat_cushions', shopController.calculatePriceSeatCushions);
+
 export default router

@@ -23,7 +23,6 @@ class ShopModel{
         return result;
     }
 
-    
     createProductOptions = async (price, shop) => {
         try {
             let [shopData] = await this.fetchAccessToken(shop);
@@ -193,6 +192,102 @@ class ShopModel{
         let product_function = Function(function_json.function[0], function_json.function[1]);
 
         return await product_function(params);
+    }
+
+    calculatePriceSeatCushions = async (params) => {
+        
+        let response = { status: false, price: 0, error: "" };
+
+        try {
+            let { fill, thickness = +thickness, depth = +depth, width = +width, welting, shop, ties, shape, fabric } = params.body;
+            let fabric_options = ["red", "blue", "green"];
+            let shape_options = ["rectangular", "trapezoid"];
+            let defaultFoamPrice = {
+                "Soft" : 0.6,
+                "Medium": 0.8,
+                "Firm": 1.4,
+                "Cover": 0
+            };
+            let tiesCount = {
+                "none" : 0,
+                "side" : 2,
+                "standard" : 2,
+                "double" : 4
+            };
+            let cushionSizePrice = {
+                "Small" : {
+                    "welting" : {
+                        "single" : 18,
+                        "double" : 24,
+                        "none" : 0,
+                    },
+                    "productType" : 1.85
+                },
+                "Medium" : {
+                    "welting" : {
+                        "single" : 28,
+                        "double" : 35,
+                        "none" : 0,
+                    },
+                    "productType" : 2.00
+                },
+                "Large" : {
+                    "welting" : {
+                        "single" : 36,
+                        "double" : 48,
+                        "none" : 0,
+                    },
+                    "productType" : 2.2
+                } 
+            };
+            let dimensionsMax = Math.max(thickness, depth, width);
+            let cushionSize = dimensionsMax <= 25 ? "Small" : dimensionsMax <= 70 ? "Medium" : "Large";
+
+            if( cushionSizePrice[`${cushionSize}`].welting[`${welting}`] === undefined ||
+                defaultFoamPrice[`${fill}`] === undefined ||
+                tiesCount[`${ties}`] === undefined ||
+                !fabric_options.includes(fabric) || 
+                !shape_options.includes(shape)
+            ){
+                throw Error ("Invalid selected options");
+            }
+            
+            let defaultFabricPrice = 29.95;
+            let pricePerTie = 4;
+
+            let surfaceArea = ((thickness * depth) + (thickness * width) + (depth * width)) * 2;
+        
+            let newPrice = (
+                /*DOCU:
+                    Foam price
+                */
+                (thickness * depth * width)/144 * defaultFoamPrice[`${fill}`] + 
+                /*DOCU:
+                    Fabric price
+                */
+                Math.ceil(surfaceArea / 1944) * 1.2 * defaultFabricPrice +
+                /*DOCU:
+                    Welting price
+                */
+                cushionSizePrice[`${cushionSize}`].welting[`${welting}`] + 
+                /*DOCU:
+                    Tie price
+                */
+                tiesCount[`${ties}`] * pricePerTie) *
+                /*DOCU:
+                    Product type price
+                */
+                cushionSizePrice[`${cushionSize}`].productType;
+
+            response.status = true;
+            response.price = newPrice;
+        }
+        catch (error) {
+            console.log(error);
+            response.error = error.message;
+        }
+
+        return response
     }
 }
 
